@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'dashboard.apps.DashboardConfig',
     'pages.apps.PagesConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -74,10 +75,21 @@ WSGI_APPLICATION = 'WBS_Management_Tool.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'd7aroleb1ld3to',
+        'USER': 'rivqsizmnoyflc',
+        'PASSWORD':'3e327ba8475284205c06489c4160df74c8040bc6ae4ea81062634e11b4d46a13',
+        'HOST': 'ec2-176-34-183-20.eu-west-1.compute.amazonaws.com',
+        'PORT': '5432',
     }
 }
 
