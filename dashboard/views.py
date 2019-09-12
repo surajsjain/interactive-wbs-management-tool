@@ -97,9 +97,93 @@ def wbsSpecificDisp(request):
 
 def comms(request, wbid):
     if request.method == 'POST':
+
         if 'comment' in request.POST:
-            print("You have commented")
+            usr = request.POST['user']
+            wbs = WBS.objects.filter(id = wbid)[0]
+            text = request.POST['text']
+            attachment = request.POST['attachment']
+
+            comt = Comment()
+            comt.user = request.user
+            comt.wbs_item = wbs
+            comt.text = text
+            comt.attachment = attachment
+            comt.save()
+
+            type = int(request.POST['type'])
+
+            if type > 0:
+                transfer = Trans()
+                transfer.wbs_item = wbs
+                transfer.type = int(request.POST['type'])
+                transfer.amount = float(request.POST['amount'])
+                transfer.save()
+
             return redirect('/dashboard/comments/'+str(wbid))
+
+        elif 'accept' in request.POST:
+            usr = request.POST['user']
+            wbs = WBS.objects.filter(id = wbid)[0]
+            text = request.POST['text']
+            attachment = request.POST['attachment']
+
+            comt = Comment()
+            comt.user = request.user
+            comt.wbs_item = wbs
+            comt.text = text
+            comt.attachment = attachment
+            comt.save()
+
+            comt = Comment()
+            comt.user = request.user
+            comt.wbs_item = wbs
+            comt.text = 'Transfer Accepted'
+            # comt.attachment = attachment
+            comt.save()
+
+            transfers = Trans.objects.filter(wbs_item = wbid)
+
+            tfs = []
+
+            for t in transfers:
+                tfs.append(t)
+            transfers = tfs[-1]
+
+            if(transfers.type == 1):
+                wbs.amount = wbs.amount + transfers.amount
+                wbs.save()
+            elif(transfers.type == 2):
+                wbs.amount = wbs.amount - transfers.amount
+                wbs.save()
+            elif(transfers.type == 3):
+                t3 = TypeThree.objects.filter(trans=transfers)[-1]
+                tfs = []
+
+                for t in t3:
+                    tfs.append(t)
+                t3 = tfs[-1]
+
+                targetWbs = WBS.objects.filter(id = (t3.transfer_target.id))
+                targetWbs.amount = targetWbs.amount - transfers.amount
+                wbs.amount = wbs.amount + transfers.amount
+                wbs.save()
+                targetWbs.save()
+            transfers.status = False
+            return redirect('/dashboard/comments/'+str(wbid))
+
+        elif 'reject' in request.POST:
+            transfers.status = False
+
+            comt = Comment()
+            comt.user = request.user
+            comt.wbs_item = wbs
+            comt.text = 'Transfer Rejected'
+            # comt.attachment = attachment
+            comt.save()
+            return redirect('/dashboard/comments/'+str(wbid))
+
+        return redirect('/dashboard/comments/'+str(wbid))
     else:
         profile = UserProfile.objects.filter(user = request.user)
         wbs = WBS.objects.filter(id = wbid)[0]
@@ -110,17 +194,27 @@ def comms(request, wbid):
             comments = []
 
         try:
-            transfers = Trans.objects.filter(wbs_item = wbid)[0]
-            type = transfers.type
+            transfers = Trans.objects.filter(wbs_item = wbid)
+            tfs = []
+            for t in transfers:
+                tfs.append(t)
+            transfers = tfs[-1]
+            
+            if(transfers.status is True):
+                type = transfers.type
 
-            if(type is 1):
-                t = 'Add'
-            elif(type is 2):
-                t = 'Remove'
-            elif type is 3:
-                t = 'Transfer'
+                if(type is 1):
+                    t = 'Add'
+                elif(type is 2):
+                    t = 'Remove'
+                elif type is 3:
+                    t = 'Transfer'
+            else:
+                t = None
         except:
-            t = 'None'
+            t = None
+
+        print(str(comments))
 
         ctxt = {
             'profile' : profile[0],

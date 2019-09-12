@@ -25,23 +25,24 @@
 </div>
 
 {% for c in comments %}
+<!-- {{ c }} -->
 <div class="row mt-5">
     <div class="col-xl-12 mb-5 mb-xl-0">
         <div class="card shadow" style="display: inline-block; width: -webkit-fill-available;">
             <div class="card-head">
                 <div class="media align-items-center">
                     <div class="media-body ml-2 d-none d-lg-block">
-                        <span class="mb-0 text-sm  font-weight-bold">{{ comment.user.first_name }} {{ comment.user.last_name }}</span>
+                        <span class="mb-0 text-sm  font-weight-bold">{{ c.user.first_name }} {{ c.user.last_name }}</span>
                     </div>
                 </div>
             </div>
             <div class="card-body">
                 <div class="row h-80">
-                    {{ comment.text }}
+                    {{ c.text }}
                 </div>
                 <div class="row h-20">
-                    {% if comment.attachment %}
-                    <a href="{{ comment.attachment.url }}">{{ comment.attachment.filename }}</a>
+                    {% if c.attachment %}
+                    <a href="{{ c.attachment.url }}">Click here to Download the attachment</a>
                     {% endif %}
                 </div>
             </div>
@@ -50,6 +51,7 @@
 </div>
 {% endfor %}
 
+<hr>
 
 <div class="row mt-5">
     <div class="col-xl-12 mb-5 mb-xl-0">
@@ -63,10 +65,20 @@
                     <form action="{% url 'comments' wbs.id %}" method="POST">
                         {% csrf_token %}
 
+
+
                         <input type="hidden" name="user" value="{{ user }}">
 
-                        <label for="type">What Kind of transaction do you want to propose?</label>
-                        <div class="form-group">
+
+                        <label for="type" class=""
+                        {% if transfer is not None %}
+                        style="display: none;"
+                        {% endif %}
+                        >What Kind of transaction do you want to propose?</label>
+                        <div class="form-group"
+                        {% if transfer is not None %}
+                        style="display: none;"
+                        {% endif %}>
                             <select class="form-group" name="type" class="form-group">
                                 <option value="0" Selected>I just want to comment</option>
                                 <option value="1" >Add</option>
@@ -75,8 +87,11 @@
                             </select>
                         </div>
 
-                        <div class="form-group">
-                            <label for="Amount">Enter the amount</label>
+                        <div class="form-group"
+                        {% if transfer is not None %}
+                        style="display: none;"
+                        {% endif %}>
+                            <label for="amount">Enter the amount</label>
                             <input type="number" name="amount">
                         </div>
 
@@ -91,12 +106,15 @@
                             <input type="file" name="attachment" class="form-group">
                         </div>
                         <!-- <div class="container"> -->
+
+                        {% if profile.level > 2 %}
                         <div class="form-group" style="display: inline-block; float: right; margin-left: 1%;">
                             <button type="submit" name="reject" class="btn btn-danger">Reject</button>
                         </div>
                         <div class="form-group" style="display: inline-block; float: right; margin-left: 1%;">
                             <button type="submit" name="accept" class="btn btn-success">Accept</button>
                         </div>
+                        {% endif %}
                         <div class="form-group" style="display: inline-block; float: right; margin-left: 1%;">
                             <button type="submit" name="comment" class="btn btn-primary">Comment</button>
                         </div>
@@ -110,6 +128,6 @@
         </div>
     </div>
 </div>
-
+<!-- {{ transfer }} -->
 
 {% endblock %}

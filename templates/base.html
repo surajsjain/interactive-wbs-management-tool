@@ -198,13 +198,7 @@
                         <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-right">
                             <div class=" dropdown-header noti-title">
                                 <h6 class="text-overflow m-0">
-                                    {% if profile.level is 1 %}
-                                    Finance Executive
-                                    {% elif profile.level is 2 %}
-                                    Manager
-                                    {% else %}
-                                    Director
-                                    {% endif %}
+                                    {{ profile.title }}
                                 </h6>
                             </div>
                             <!-- <a href="./examples/profile.html" class="dropdown-item">
