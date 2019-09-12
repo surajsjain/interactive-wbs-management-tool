@@ -47,10 +47,18 @@ def wbsDisp(request, budgetID):
 def budgetAdd(request):
     profile = UserProfile.objects.filter(user = request.user)
     if request.method == 'POST':
-        print(str(request.POST['product']))
-        print(str(request.POST['year']))
-        print(str(request.POST['quarter']))
-        print(str(request.POST['type']))
+
+        # print(str(request.POST['product']))
+        # print(str(request.POST['year']))
+        # print(str(request.POST['quarter']))
+        # print(str(request.POST['type']))
+
+        b = Budget()
+        b.year = request.POST['year']
+        b.quarter = request.POST['quarter']
+        b.type = request.POST['type']
+        b.product = request.POST['product']
+        b.save()
 
         return redirect('budgetPage')
     else:
@@ -58,3 +66,6 @@ def budgetAdd(request):
             'profile' : profile[0],
         }
         return render(request, 'dashboard/addBudget.html', context=ctxt)
+
+def wbsSpecificDisp(request):
+    pass
