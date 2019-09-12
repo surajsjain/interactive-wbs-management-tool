@@ -8,9 +8,11 @@ from pages.models import UserProfile
 
 def dashHome(request):
     # print(request.user)
+    transfers = Trans.objects.all()
     profile = UserProfile.objects.filter(user = request.user)
     ctxt = {
         'profile' : profile[0],
+        'transfers' : transfers,
     }
 
     return render(request, 'dashboard/dashHome.html', context=ctxt)
@@ -35,30 +37,34 @@ def wbsDisp(request, budgetID):
 
     bud = Budget.objects.filter(id = budgetID)[0]
 
+    print(str(bud))
+
     wbs = WBS.objects.filter(budget = bud)
-    transfers = Transfer.objects.filter(wbs_item = wbs)
 
-    situation = 0
-    wbsWithoutTransfers = wbs
-    wbsWithTransfers = []
+    situation = 1
 
-    if(len(teansfers) > 0):
-        situation = 1
-        wbsWithoutTransfers = []
+    transferWBS = []
+    wbAll = []
 
-        for t in transfers:
-            wbsWithTransfers.append(t.wbs_item)
+    tr = Trans.objects.all()
 
-        for w in wbs:
-            if w not in wbsWithTransfers:
-                wbsWithoutTransfers.append(w)
+    for w in wbs:
+        wbAll.append(w)
+
+    for i in tr:
+        if i.wbs_item in wbAll:
+            transferWBS.append(i)
+
+
+    print(str(wbAll))
+    print(str(transferWBS))
+
 
     ctxt = {
         'profile' : profile[0],
         'bud' : bud,
-        'situation' : situation,
-        'wbsWithoutTransfers' : wbsWithoutTransfers,
-        'transfers' : wbsWithTransfers
+        'wbAll' : wbAll,
+        'transferWBS' : transferWBS,
     }
 
     return render(request, 'dashboard/specificWBS.html', context=ctxt)
@@ -88,3 +94,48 @@ def budgetAdd(request):
 
 def wbsSpecificDisp(request):
     pass
+
+def comms(request, wbid):
+    if request.method == 'POST':
+        if 'comment' in request.POST:
+            print("You have commented")
+            return redirect('/dashboard/comments/'+str(wbid))
+    else:
+        profile = UserProfile.objects.filter(user = request.user)
+        wbs = WBS.objects.filter(id = wbid)[0]
+
+        try:
+            comments = Comment.objects.filter(wbs_item = wbs)
+        except:
+            comments = []
+
+        try:
+            transfers = Trans.objects.filter(wbs_item = wbid)[0]
+            type = transfers.type
+
+            if(type is 1):
+                t = 'Add'
+            elif(type is 2):
+                t = 'Remove'
+            elif type is 3:
+                t = 'Transfer'
+        except:
+            t = 'None'
+
+        ctxt = {
+            'profile' : profile[0],
+            'wbs' : wbs,
+            'transfer' : t,
+            'comments' : comments,
+        }
+        return render(request, 'dashboard/comments.html', context=ctxt)
+
+def elementAdd(request):
+
+    profile = UserProfile.objects.filter(user = request.user)
+    ccs = CostCenters.objects.all()
+    ctxt = {
+        'profile' : profile[0],
+        'ccs' : ccs,
+    }
+    return render(request, 'dashboard/addWBS.html', context=ctxt)

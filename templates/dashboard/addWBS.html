@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+
+{% block externalLinks %}
+
+{% endblock %}
+
+{% block mainContent %}
+<div class="row mt-5">
+    <div class="col-xl-12 mb-5 mb-xl-0">
+        <div class="card shadow" style="display: inline-block; width: -webkit-fill-available;">
+            <div class="card-head">
+                <h1 align="center" style="font-family: Arial, Helvetica, sans-serif; font-size: xx-large; color: #4CAF50"> Create a new WBS Element </h1>
+            </div>
+
+            <div class="card-body">
+                <div>
+                    <form action="{% url 'wbsAdd' %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="" value="">
+                        <div class="form-group">
+                            <label for="product">Budget</label>
+                            <input type="number" id="brandName" name="amount" placeholder="Ex: 500" class="form-control text-dark">
+                        </div>
+
+                        <div class="form-group">
+                        <label for="year">Cost Center</label>
+                        <select id="year" name="cc" class="form-control text-dark">
+                            {% for c in ccs%}
+                            <option value="2020">{{ c }}</option>
+                            {% endfor %}
+                        </select>
+                        </div>
+
+                        <div class="form-group">
+                        <label for="quarter">Quarter</label>
+                        <select id="year" name="quarter" class="form-control text-dark">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                        </div>
+
+                        <div class="form-group">
+                        <label for="type">Type</label>
+                        <select id="type" name="type" class="form-control text-dark">
+                            <option value="Before Quarter">Before Quarter</option>
+                            <option value="After Quarter">On Quarter</option>
+
+                        </select>
+                        </div>
+
+                        <div class="form-group">
+                        <button type="submit" name="button" class="btn btn-primary">Submit</button>
+                        </div>
+                        <!-- <input type="submit" value="Submit"> -->
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

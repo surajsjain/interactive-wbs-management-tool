@@ -25,6 +25,8 @@
                     <th></th>
                 </tr>
                 {% for budget in budgets %}
+
+                {% if budget.quarter is not 0 %}
                 <a href="{% url 'wbsPage' budget.id %}">
 
                     <tr>
@@ -38,6 +40,8 @@
                     </tr>
 
                 </a>
+                {% endif %}
+
                 {% endfor %}
             </table>
 

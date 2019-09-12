@@ -41,18 +41,22 @@ class WBS(models.Model):
     def __str__(self):
         return self.budget.product +' - '+ self.cc.name
 
-class Transfer(models.Model):
-    wbs_item = models.ForeignKey(WBS, on_delete=models.CASCADE, related_name='wbs_item')
+class Trans(models.Model):
+    wbs_item = models.ForeignKey(WBS, on_delete=models.CASCADE)
     type = models.IntegerField() # 1- add, 2- remove, 3- Transfer from another wbs
     timeInitiated = models.DateTimeField(default=datetime.datetime.now())
 
     amount = models.DecimalField(decimal_places=2, max_digits=8)
-    transfer_target = models.ForeignKey(WBS, on_delete=models.CASCADE, blank=True, related_name='transfer_target')
+    # transfer_target = models.ForeignKey(WBS, on_delete=models.CASCADE, blank=True, related_name='transfer_target')
 
     status = models.BooleanField(default=True)
 
     # def __str__(self):
     #     return str(self.wbs_item.budget.product)+' - '+str(self.wbs_item.cc.name)+' - '+str(self.amount)
+
+class TypeThree(models.Model):
+    trans = models.ForeignKey(Trans, on_delete=models.CASCADE)
+    transfer_target = models.ForeignKey(WBS, on_delete=models.CASCADE, blank=True)
 
 class Comment(models.Model):
     timestamp = models.DateTimeField(default=datetime.datetime.now())
