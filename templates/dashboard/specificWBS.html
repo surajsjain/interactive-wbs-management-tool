@@ -14,18 +14,25 @@
             <!-- Put Whatever you want from here -->
 
             <!-- Budget Display -->
-            <div class="card-header">
-                <h1>WBS Elements</h1>
-                <h3 class="text">Here's all the wbs elements for the budget: {{ bud.product }} ( {{ bud.year }}, Quarter {{ bud.quarter }} )</h3>
+            <div class="card-body">
+                <div class="col-xl-7" style="display: inline-block; float: left;">
+                    <h1>WBS Elements for {{ bud.product }}</h1>
+                    <h3 class="text">Here's all the wbs elements for the year {{ bud.year }}, Quarter {{ bud.quarter }}</h3>
+                </div>
+                <div class="col-xl-3" style="display: inline-block; float: right;">
+                    <h3>TOTAL BUDGET</h3>
+                    <h1>${{ totalCost }}</h1>
+                </div>
+
             </div>
 
             <!-- Filter -->
-            <div class="card-body">
+            <!-- <div class="card-body">
                 <h1 class="" style="">Filter</h1>
-                <form class="form" action="index.html" method="post">
-
-                </form>
-            </div>
+                <select class="form-group">
+                    <option value=""></option>
+                </select>
+            </div> -->
 
 
         </div>
@@ -33,7 +40,7 @@
         <!-- WBS Elements with transers -->
 
 
-        <div class="card bg-gradient-default shadow mb-5" style="display: inline-block; width: -webkit-fill-available;">
+        <!-- <div class="card bg-gradient-default shadow mb-5" style="clear: both; display: inline-block; width: -webkit-fill-available;">
             <div class="card-header bg-transparent">
                 <div class="col">
                     <h6 class="text-uppercase text-light ls-1 mb-1">Elements with Transaction requests</h6>
@@ -54,9 +61,7 @@
                             </div>
                         </div>
                         <div class="card-body" style="padding: 0%">
-                            <!-- <div class="row font-weight-bold h-80" style="padding: 10%; margin-left: auto; margin-right: auto; display: inline-block; width: -webkit-fill-available; align-content: center; align-items: center;">
-                            Newspaper ADS
-                        </div> -->
+
                             <div class="row h-10" style="padding: 7%; margin-left: auto; margin-right: auto; display: inline-block; width: -webkit-fill-available; align-content: center; align-items: center; background: hotpink;">
                                 <h6 class="text-uppercase ls-1 mb-1" style="color: white;">Current Budget</h6>
                                 <h4 class="font-weight-bold" style="color: white; font-size: 120%;">${{ t.wbs_item.amount }}</h4>
@@ -79,6 +84,92 @@
                     </div>
                 </a>
                 {% endfor %}
+
+            </div>
+        </div> -->
+
+        <div class="card bg-gradient-default shadow" style="display: inline-block; width: -webkit-fill-available;">
+            <div class="card-header bg-transparent">
+                <div class="col">
+                    <h6 class="text-uppercase text-light ls-1 mb-1">Overview</h6>
+                    <h2 class="text-white mb-0">Pending Requests</h2>
+                </div>
+            </div>
+            <div class="card-body">
+
+                {% if profile.level > 1 %}
+                {% for t in transferWBS %}
+                {% if t.status %}
+                <a href="{% url 'comments' t.wbs_item.id %}">
+                <div class="card rounded basicCard" style="border: 0px;">
+                    <div class="card-header" style="padding: 0%">
+                        <div class="row font-weight-bold cardTitleRow" style="font-size: x-large; margin-left: auto; margin-right: auto; display: block;">
+                            {{ t.wbs_item.cc.cc_id }}
+                        </div>
+                        <div class="row font-weight-bold h-80" style="padding: 15%; margin-left: auto; margin-right: auto; display: inline-block; width: -webkit-fill-available; align-content: center; align-items: center;">
+                            {{ t.wbs_item.cc.name }}
+                        </div>
+                    </div>
+                    <div class="card-body" style="padding: 0%">
+                        <!-- <div class="row font-weight-bold h-80" style="padding: 10%; margin-left: auto; margin-right: auto; display: inline-block; width: -webkit-fill-available; align-content: center; align-items: center;">
+                            Newspaper ADS
+                        </div> -->
+                        <div class="row h-10" style="padding: 7%; margin-left: auto; margin-right: auto; display: inline-block; width: -webkit-fill-available; align-content: center; align-items: center; background: hotpink;">
+                            <h6 class="text-uppercase ls-1 mb-1" style="color: white;">Current Budget</h6>
+                            <h4 class="font-weight-bold" style="color: white; font-size: 120%;">${{ t.wbs_item.amount }}</h4>
+                        </div>
+                        <div class="row h-10" style="padding: 7%; margin-left: auto; margin-right: auto; display: inline-block; width: -webkit-fill-available; align-content: center; align-items: center;
+                            {% if t.type is 1 %}
+                                background: forestgreen;">
+                                <h6 class="text-uppercase ls-1 mb-1" style="color: white;">Add</h6>
+                            {% elif t.type is 2 %}
+                                background: crimson;">
+                                <h6 class="text-uppercase ls-1 mb-1" style="color: white;">Remove</h6>
+                            {% elif t.type is 3 %}
+                                background: darkorange;">
+                                <h6 class="text-uppercase ls-1 mb-1" style="color: white;">Transfer</h6>
+                            {% endif %}
+                            <h4 class="font-weight-bold" style="color: white; font-size: 120%;">${{ t.amount }}</h4>
+                        </div>
+                    </div>
+                </div>
+                </a>
+                {% endif %}
+                {% endfor %}
+
+                {% else %}
+
+                {% for t in transferWBS %}
+                {% if t.wbs_item.cc.name in access %}
+                <a href="{% url 'comments' t.wbs_item.id %}">
+                <div class="card rounded basicCard" style="border: 0px;">
+                    <div class="card-header" style="padding: 0%">
+                        <div class="row font-weight-bold cardTitleRow" style="font-size: x-large; margin-left: auto; margin-right: auto; display: block;">
+                            {{ t.wbs_item.cc.cc_id }}
+                        </div>
+                        <div class="row font-weight-bold h-80" style="padding: 15%; margin-left: auto; margin-right: auto; display: inline-block; width: -webkit-fill-available; align-content: center; align-items: center;">
+                            {{ t.wbs_item.cc.name }}
+                        </div>
+                    </div>
+                    <div class="card-body" style="padding: 0%">
+                        <!-- <div class="row font-weight-bold h-80" style="padding: 10%; margin-left: auto; margin-right: auto; display: inline-block; width: -webkit-fill-available; align-content: center; align-items: center;">
+                            Newspaper ADS
+                        </div> -->
+                        <div class="row h-10" style="padding: 7%; margin-left: auto; margin-right: auto; display: inline-block; width: -webkit-fill-available; align-content: center; align-items: center; background: hotpink;">
+                            <h6 class="text-uppercase ls-1 mb-1" style="color: white;">Current Budget</h6>
+                            <h4 class="font-weight-bold" style="color: white; font-size: 120%;">${{ t.wbs_item.amount }}</h4>
+                        </div>
+                        <div class="row h-10" style="padding: 7%; margin-left: auto; margin-right: auto; display: inline-block; width: -webkit-fill-available; align-content: center; align-items: center; background: darkorange;">
+                            <h6 class="text-uppercase ls-1 mb-1" style="color: white;">Transfer</h6>
+                            <h4 class="font-weight-bold" style="color: white; font-size: 120%;">${{ t.amount }}</h4>
+                        </div>
+                    </div>
+                </div>
+                </a>
+                {% endif %}
+                {% endfor %}
+
+                {% endif %}
 
             </div>
         </div>

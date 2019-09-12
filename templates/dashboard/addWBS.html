@@ -16,24 +16,24 @@
 
             <div class="card-body">
                 <div>
-                    <form action="{% url 'wbsAdd' %}" method="POST">
+                    <form action="{% url 'wbsAdd' bid %}" method="POST">
                         {% csrf_token %}
                         <input type="hidden" name="" value="">
                         <div class="form-group">
-                            <label for="product">Budget</label>
+                            <label for="amount">Budget</label>
                             <input type="number" id="brandName" name="amount" placeholder="Ex: 500" class="form-control text-dark">
                         </div>
 
                         <div class="form-group">
-                        <label for="year">Cost Center</label>
+                        <label for="cc">Cost Center</label>
                         <select id="year" name="cc" class="form-control text-dark">
                             {% for c in ccs%}
-                            <option value="2020">{{ c }}</option>
+                            <option value="{{ c.id }}">{{ c }}</option>
                             {% endfor %}
                         </select>
                         </div>
 
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                         <label for="quarter">Quarter</label>
                         <select id="year" name="quarter" class="form-control text-dark">
                             <option value="1">1</option>
@@ -50,7 +50,7 @@
                             <option value="After Quarter">On Quarter</option>
 
                         </select>
-                        </div>
+                        </div> -->
 
                         <div class="form-group">
                         <button type="submit" name="button" class="btn btn-primary">Submit</button>

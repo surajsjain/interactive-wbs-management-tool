@@ -2,6 +2,9 @@
 
 {% load staticfiles %}
 
+{% block externalLinks %}
+
+{% endblock %}
 
 {% block mainContent %}
 
@@ -26,7 +29,6 @@
                 </tr>
                 {% for budget in budgets %}
 
-                {% if profile.level > 1 %}
                 <a href="{% url 'wbsPage' budget.id %}">
 
                     <tr>
@@ -49,29 +51,6 @@
 
                 </a>
 
-                {% elif budget.product in access %}
-                <a href="{% url 'wbsPage' budget.id %}">
-
-                    <tr>
-
-                        <a href="{% url 'wbsPage' budget.id %}">
-                            <td>{{ budget.product }}</td>
-                        </a>
-                        <a href="{% url 'wbsPage' budget.id %}">
-                            <td>{{ budget.year }}</td>
-                        </a>
-                        <a href="{% url 'wbsPage' budget.id %}">
-                            <td>{{ budget.quarter }}</td>
-                        </a>
-                        <a href="{% url 'wbsPage' budget.id %}">
-                            <td>{{ budget.type }}</td>
-                        </a>
-                        <td><a href="{% url 'wbsPage' budget.id %}">View Details</a></td>
-
-                    </tr>
-
-                </a>
-                {% endif %}
 
                 {% endfor %}
             </table>
@@ -80,7 +59,5 @@
             <a href="{% url 'budgetAddPage' %}" class="btn btn-primary" style="width:-webkit-fill-available"><i class="fa fa-plus"></i> Add a new Budget</a>
             {% endif %}
         </div>
-    </div>
-</div>
 
 {% endblock %}

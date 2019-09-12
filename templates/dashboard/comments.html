@@ -12,10 +12,17 @@
     <div class="col-xl-12 mb-5 mb-xl-0">
         <div class="card bg-gradient-default shadow" style="display: inline-block; width: -webkit-fill-available;">
             <div class="card-head" style="padding: 1%">
-                <h3 class="text-light">{{ wbs.cc.id }}</h3>
-                <h1 class="text-light">{{ wbs.cc.name }}</h1>
+                <div class="col-xl-6" style="display: inline-block; float: left;">
+                    <h3 class="text-light">{{ wbs.cc.id }}</h3>
+                    <h1 class="text-light">{{ wbs.cc.name }}</h1>
+                </div>
+                <div class="col-xl-4" style="display: inline-block; float: left;">
+                    <h3 class="text-light">CURRENT BUDGET</h3>
+                    <h1 class="text-light">${{ wbs.amount }}</h1>
+                </div>
+
             </div>
-            <div class="card-body">
+            <div class="card-body" style="clear:both;">
                 <div class="row h-100 text-light">
                     Type of Transfer Proposed: {{ transfer }}
                 </div>
@@ -65,32 +72,33 @@
                     <form action="{% url 'comments' wbs.id %}" method="POST">
                         {% csrf_token %}
 
-
-
                         <input type="hidden" name="user" value="{{ user }}">
 
 
-                        <label for="type" class=""
-                        {% if transfer is not None %}
-                        style="display: none;"
-                        {% endif %}
-                        >What Kind of transaction do you want to propose?</label>
-                        <div class="form-group"
-                        {% if transfer is not None %}
-                        style="display: none;"
-                        {% endif %}>
+                        <label for="type" class="" {% if transfer is not None %} style="display: none;" {% endif %}>What Kind of transaction do you want to propose?</label>
+                        <div class="form-group" {% if transfer is not None %} style="display: none;" {% endif %}>
                             <select class="form-group" name="type" class="form-group">
                                 <option value="0" Selected>I just want to comment</option>
-                                <option value="1" >Add</option>
-                                <option value="2" >Remove</option>
-                                <option value="3" >Transfer from another WBS element</option>
+                                <option value="1">Add</option>
+                                <option value="2">Remove</option>
+                                <option value="3">Transfer from another WBS element</option>
                             </select>
                         </div>
 
-                        <div class="form-group"
-                        {% if transfer is not None %}
-                        style="display: none;"
-                        {% endif %}>
+                        <!-- <div class="form-group" {% if transfer is not None %} style="display: none;" {% endif %}>
+                            <label for="target">Transfer Target <small>(Please select none if your transaction is not type 3)</small></label>
+
+                            <select class="form-group" name="oth" class="form-group">
+                                <option value="None" Selected>None</option>
+                                {% for o in otherWBS %}
+                                <option value="1">{{ o }}</option>
+                                <option value="2" >Remove</option>
+                                <option value="3" >Transfer from another WBS element</option>
+                                {% endfor %}
+                            </select>
+                        </div> -->
+
+                        <div class="form-group" {% if transfer is not None %} style="display: none;" {% endif %}>
                             <label for="amount">Enter the amount</label>
                             <input type="number" name="amount">
                         </div>
@@ -114,6 +122,24 @@
                         <div class="form-group" style="display: inline-block; float: right; margin-left: 1%;">
                             <button type="submit" name="accept" class="btn btn-success">Accept</button>
                         </div>
+
+                        {% elif profile.level is 2 %}
+                        {% if access is 1 and transfer.type is 1 %}
+                        <div class="form-group" style="display: inline-block; float: right; margin-left: 1%;">
+                            <button type="submit" name="accept" class="btn btn-success">Accept</button>
+                        </div>
+                        <div class="form-group" style="display: inline-block; float: right; margin-left: 1%;">
+                            <button type="submit" name="reject" class="btn btn-danger">Reject</button>
+                        </div>
+                        {% elif access is 2 and transfer.type is 2 %}
+                        <div class="form-group" style="display: inline-block; float: right; margin-left: 1%;">
+                            <button type="submit" name="accept" class="btn btn-success">Accept</button>
+                        </div>
+                        <div class="form-group" style="display: inline-block; float: right; margin-left: 1%;">
+                            <button type="submit" name="reject" class="btn btn-danger">Reject</button>
+                        </div>
+                        {% endif %}
+
                         {% endif %}
                         <div class="form-group" style="display: inline-block; float: right; margin-left: 1%;">
                             <button type="submit" name="comment" class="btn btn-primary">Comment</button>

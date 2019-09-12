@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 
 from .models import *
 from .searializers import *
-from pages.models import UserProfile
+from pages.models import *
 
 # Create your views here.
 
@@ -10,7 +10,14 @@ def dashHome(request):
     # print(request.user)
     transfers = Trans.objects.all()
     profile = UserProfile.objects.filter(user = request.user)
+
+    permissions = UserPermissions.objects.filter(user = request.user)
+    access = []
+    for p in permissions:
+        access.append(p.products)
+
     ctxt = {
+        'access' : access,
         'profile' : profile[0],
         'transfers' : transfers,
     }
@@ -23,7 +30,13 @@ def budgetDisp(request):
 
     buds = Budget.objects.all()
 
+    permissions = UserPermissions.objects.filter(user = request.user)
+    access = []
+    for p in permissions:
+        access.append(p.products)
+
     ctxt = {
+        'access' : access,
         'profile' : profile[0],
         'budgets' : buds,
     }
@@ -55,16 +68,26 @@ def wbsDisp(request, budgetID):
         if i.wbs_item in wbAll:
             transferWBS.append(i)
 
+    tc = 0
+    for w in wbAll:
+        tc = tc + w.amount
+
 
     print(str(wbAll))
     print(str(transferWBS))
 
+    permissions = UserPermissions.objects.filter(user = request.user)
+    access = []
+    for p in permissions:
+        access.append(p.products)
 
     ctxt = {
+        'access' : access,
         'profile' : profile[0],
         'bud' : bud,
         'wbAll' : wbAll,
         'transferWBS' : transferWBS,
+        'totalCost' : tc,
     }
 
     return render(request, 'dashboard/specificWBS.html', context=ctxt)
@@ -111,6 +134,7 @@ def comms(request, wbid):
             comt.attachment = attachment
             comt.save()
 
+            # print(request.POST['type'])
             type = int(request.POST['type'])
 
             if type > 0:
@@ -170,10 +194,12 @@ def comms(request, wbid):
                 wbs.save()
                 targetWbs.save()
             transfers.status = False
+            transfers.save()
             return redirect('/dashboard/comments/'+str(wbid))
 
         elif 'reject' in request.POST:
             transfers.status = False
+            transfers.save()
 
             comt = Comment()
             comt.user = request.user
@@ -188,6 +214,9 @@ def comms(request, wbid):
         profile = UserProfile.objects.filter(user = request.user)
         wbs = WBS.objects.filter(id = wbid)[0]
 
+        wbsBud = wbs.budget
+        otherWBS = WBS.objects.filter(budget = wbsBud)
+
         try:
             comments = Comment.objects.filter(wbs_item = wbs)
         except:
@@ -199,7 +228,7 @@ def comms(request, wbid):
             for t in transfers:
                 tfs.append(t)
             transfers = tfs[-1]
-            
+
             if(transfers.status is True):
                 type = transfers.type
 
@@ -214,22 +243,47 @@ def comms(request, wbid):
         except:
             t = None
 
+
         print(str(comments))
 
+        access = 4
+
+        if profile[0].level is 2:
+            permissions = UserAurhority.objects.filter(user = request.user)
+            access = []
+            for p in permissions:
+                access.append(p.action)
+
+            access = access[0]
+
+
         ctxt = {
+            'access' : access,
             'profile' : profile[0],
             'wbs' : wbs,
             'transfer' : t,
             'comments' : comments,
+            'otherWBS' : otherWBS,
         }
         return render(request, 'dashboard/comments.html', context=ctxt)
 
-def elementAdd(request):
+def elementAdd(request, bid):
+
+    if request.method == 'POST':
+        w = WBS()
+        w.budget = Budget.objects.filter(id = bid)[0]
+        ccid = int(request.POST['cc'])
+        w.cc = CostCenters.objects.filter(id = ccid)[0]
+        w.amount = float(request.POST['amount'])
+        w.save()
+
+        return redirect('/dashboard/wbs/'+str(bid))
 
     profile = UserProfile.objects.filter(user = request.user)
     ccs = CostCenters.objects.all()
     ctxt = {
         'profile' : profile[0],
         'ccs' : ccs,
+        'bid' : bid,
     }
     return render(request, 'dashboard/addWBS.html', context=ctxt)

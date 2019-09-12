@@ -16,7 +16,50 @@
             </div>
             <div class="card-body">
 
+                {% if profile.level > 1 %}
                 {% for t in transfers %}
+                {% if t.status %}
+                <a href="{% url 'comments' t.wbs_item.id %}">
+                <div class="card rounded basicCard" style="border: 0px;">
+                    <div class="card-header" style="padding: 0%">
+                        <div class="row font-weight-bold cardTitleRow" style="font-size: x-large; margin-left: auto; margin-right: auto; display: block;">
+                            {{ t.wbs_item.cc.cc_id }}
+                        </div>
+                        <div class="row font-weight-bold h-80" style="padding: 15%; margin-left: auto; margin-right: auto; display: inline-block; width: -webkit-fill-available; align-content: center; align-items: center;">
+                            {{ t.wbs_item.cc.name }}
+                        </div>
+                    </div>
+                    <div class="card-body" style="padding: 0%">
+                        <!-- <div class="row font-weight-bold h-80" style="padding: 10%; margin-left: auto; margin-right: auto; display: inline-block; width: -webkit-fill-available; align-content: center; align-items: center;">
+                            Newspaper ADS
+                        </div> -->
+                        <div class="row h-10" style="padding: 7%; margin-left: auto; margin-right: auto; display: inline-block; width: -webkit-fill-available; align-content: center; align-items: center; background: hotpink;">
+                            <h6 class="text-uppercase ls-1 mb-1" style="color: white;">Current Budget</h6>
+                            <h4 class="font-weight-bold" style="color: white; font-size: 120%;">${{ t.wbs_item.amount }}</h4>
+                        </div>
+                        <div class="row h-10" style="padding: 7%; margin-left: auto; margin-right: auto; display: inline-block; width: -webkit-fill-available; align-content: center; align-items: center;
+                            {% if t.type is 1 %}
+                                background: forestgreen;">
+                                <h6 class="text-uppercase ls-1 mb-1" style="color: white;">Add</h6>
+                            {% elif t.type is 2 %}
+                                background: crimson;">
+                                <h6 class="text-uppercase ls-1 mb-1" style="color: white;">Remove</h6>
+                            {% elif t.type is 3 %}
+                                background: darkorange;">
+                                <h6 class="text-uppercase ls-1 mb-1" style="color: white;">Transfer</h6>
+                            {% endif %}
+                            <h4 class="font-weight-bold" style="color: white; font-size: 120%;">${{ t.amount }}</h4>
+                        </div>
+                    </div>
+                </div>
+                </a>
+                {% endif %}
+                {% endfor %}
+
+                {% else %}
+
+                {% for t in transfers %}
+                {% if t.wbs_item.cc.name in access %}
                 <a href="{% url 'comments' t.wbs_item.id %}">
                 <div class="card rounded basicCard" style="border: 0px;">
                     <div class="card-header" style="padding: 0%">
@@ -42,7 +85,10 @@
                     </div>
                 </div>
                 </a>
+                {% endif %}
                 {% endfor %}
+
+                {% endif %}
 
             </div>
         </div>
