@@ -21,7 +21,8 @@ def login(request):
     else:
         return render(request, 'pages/login.html')
 
-def logout():
+def logout(request):
     if request.method == 'POST':
         auth.logout(request)
+        # messages.success(request, 'You are now logged out')
         return redirect('login')

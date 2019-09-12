@@ -30,22 +30,24 @@ class Budget(models.Model):
     def __str__(self):
         return str(self.year)+' - '+self.product+' - '+self.type
 
-class WBS_Item(models.Model):
+class WBS(models.Model):
     budget = models.ForeignKey(Budget, on_delete=models.CASCADE)
-    cc_index = models.CharField(max_length=20)
-    name = models.CharField(max_length=200) ##TV Ads, Newspaper Islands
+    # cc_index = models.CharField(max_length=20)
+    # name = models.CharField(max_length=200) ##TV Ads, Newspaper Islands
+
+    cc = models.ForeignKey(CostCenters, on_delete=models.CASCADE, default=None)
     amount = models.DecimalField(decimal_places=2, max_digits=8)
 
     def __str__(self):
-        return self.budget.product +' - '+ self.name
+        return self.budget.product +' - '+ self.cc.cc_id
 
 class Transfer(models.Model):
-    wbs_item = models.ForeignKey(WBS_Item, on_delete=models.CASCADE, related_name='wbs_item')
+    wbs_item = models.ForeignKey(WBS, on_delete=models.CASCADE, related_name='wbs_item')
     type = models.IntegerField() # 1- add, 2- remove, 3- Transfer from another wbs
     timeInitiated = models.DateTimeField(default=datetime.datetime.now())
 
     amount = models.DecimalField(decimal_places=2, max_digits=8)
-    transfer_target = models.ForeignKey(WBS_Item, on_delete=models.CASCADE, blank=True, related_name='transfer_target')
+    transfer_target = models.ForeignKey(WBS, on_delete=models.CASCADE, blank=True, related_name='transfer_target')
 
     status = models.BooleanField(default=True)
 
@@ -55,7 +57,7 @@ class Transfer(models.Model):
 class Comment(models.Model):
     timestamp = models.DateTimeField(default=datetime.datetime.now())
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    wbs_item = models.ForeignKey(WBS_Item, on_delete=models.CASCADE)
+    wbs_item = models.ForeignKey(WBS, on_delete=models.CASCADE)
     text = models.CharField(max_length=3000, blank=True)
     attachment = models.FileField(upload_to='attachments/%Y/%m/%d/', blank=True)
 
