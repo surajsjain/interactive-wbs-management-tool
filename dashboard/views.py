@@ -34,12 +34,31 @@ def wbsDisp(request, budgetID):
     profile = UserProfile.objects.filter(user = request.user)
 
     bud = Budget.objects.filter(id = budgetID)[0]
-    breakdowns = WBS.objects.filter(budget = bud)
+
+    wbs = WBS.objects.filter(budget = bud)
+    transfers = Transfer.objects.filter(wbs_item = wbs)
+
+    situation = 0
+    wbsWithoutTransfers = wbs
+    wbsWithTransfers = []
+
+    if(len(teansfers) > 0):
+        situation = 1
+        wbsWithoutTransfers = []
+
+        for t in transfers:
+            wbsWithTransfers.append(t.wbs_item)
+
+        for w in wbs:
+            if w not in wbsWithTransfers:
+                wbsWithoutTransfers.append(w)
 
     ctxt = {
         'profile' : profile[0],
         'bud' : bud,
-        'breakdowns' : breakdowns,
+        'situation' : situation,
+        'wbsWithoutTransfers' : wbsWithoutTransfers,
+        'transfers' : wbsWithTransfers
     }
 
     return render(request, 'dashboard/specificWBS.html', context=ctxt)

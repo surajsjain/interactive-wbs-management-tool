@@ -39,7 +39,7 @@ class WBS(models.Model):
     amount = models.DecimalField(decimal_places=2, max_digits=8)
 
     def __str__(self):
-        return self.budget.product +' - '+ self.cc.cc_id
+        return self.budget.product +' - '+ self.cc.name
 
 class Transfer(models.Model):
     wbs_item = models.ForeignKey(WBS, on_delete=models.CASCADE, related_name='wbs_item')
@@ -51,8 +51,8 @@ class Transfer(models.Model):
 
     status = models.BooleanField(default=True)
 
-    def __str__(self):
-        return str(self.wbs_item.budget.product)+' - '+str(self.wbs_item.name)+' - '+str(self.amount)
+    # def __str__(self):
+    #     return str(self.wbs_item.budget.product)+' - '+str(self.wbs_item.cc.name)+' - '+str(self.amount)
 
 class Comment(models.Model):
     timestamp = models.DateTimeField(default=datetime.datetime.now())
