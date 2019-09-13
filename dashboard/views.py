@@ -157,6 +157,7 @@ def comms(request, wbid):
                 transfer.wbs_item = wbs
                 transfer.type = int(request.POST['type'])
                 transfer.amount = float(request.POST['amount'])
+                transfer.status = True
                 transfer.save()
 
             return redirect('/dashboard/comments/'+str(wbid))
