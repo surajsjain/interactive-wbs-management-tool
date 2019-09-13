@@ -59,14 +59,24 @@ def wbsDisp(request, budgetID):
     transferWBS = []
     wbAll = []
 
-    tr = Trans.objects.all()
+    # tr = Trans.objects.filter(wbs_item = wbs)
+    # print('BACHMAN: '+str(tr))
 
     for w in wbs:
         wbAll.append(w)
 
-    for i in tr:
-        if i.wbs_item in wbAll:
-            transferWBS.append(i)
+    # for i in tr:
+    #     if i.wbs_item.budget.id is budgetID:
+    #         transferWBS.append(i)
+
+    permissions = UserPermissions.objects.filter(user = request.user)
+    access = []
+    for p in permissions:
+        access.append(p.products)
+
+        # if (i.wbs_item) in wbAll:
+        #     print('blah: '+str(i.wbs_item))
+        #     transferWBS.append(i)
 
     tc = 0
     for w in wbAll:
@@ -76,17 +86,22 @@ def wbsDisp(request, budgetID):
     print(str(wbAll))
     print(str(transferWBS))
 
-    permissions = UserPermissions.objects.filter(user = request.user)
-    access = []
-    for p in permissions:
-        access.append(p.products)
+    # transfers = Trans.objects.filter()
+
+    # permissions = UserPermissions.objects.filter(user = request.user)
+    # access = []
+    # for p in permissions:
+    #     access.append(p.products)
+    # print(str(transferWBS))
+
+    transfers = Trans.objects.all()
 
     ctxt = {
         'access' : access,
         'profile' : profile[0],
         'bud' : bud,
         'wbAll' : wbAll,
-        'transferWBS' : transferWBS,
+        'transferWBS' : transfers,
         'totalCost' : tc,
     }
 

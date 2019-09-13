@@ -57,9 +57,11 @@
                 {% endfor %}
 
                 {% else %}
+                <!-- {{ access }} -->
 
                 {% for t in transfers %}
-                {% if t.wbs_item.cc.name in access %}
+                <!-- {{ t.wbs_item.cc.name }} -->
+                <!-- {% if t.wbs_item.budget.product in access %} -->
                 <a href="{% url 'comments' t.wbs_item.id %}">
                 <div class="card rounded basicCard" style="border: 0px;">
                     <div class="card-header" style="padding: 0%">
@@ -85,7 +87,7 @@
                     </div>
                 </div>
                 </a>
-                {% endif %}
+                <!-- {% endif %} -->
                 {% endfor %}
 
                 {% endif %}
