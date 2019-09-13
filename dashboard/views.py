@@ -198,6 +198,12 @@ def comms(request, wbid):
             return redirect('/dashboard/comments/'+str(wbid))
 
         elif 'reject' in request.POST:
+            transfers = Trans.objects.filter(wbs_item = wbid)
+            wbs = WBS.objects.filter(id = wbid)[0]
+            tfs = []
+            for t in transfers:
+                tfs.append(t)
+            transfers = tfs[-1]
             transfers.status = False
             transfers.save()
 
