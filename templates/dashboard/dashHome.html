@@ -80,8 +80,16 @@
                             <h6 class="text-uppercase ls-1 mb-1" style="color: white;">Current Budget</h6>
                             <h4 class="font-weight-bold" style="color: white; font-size: 120%;">${{ t.wbs_item.amount }}</h4>
                         </div>
-                        <div class="row h-10" style="padding: 7%; margin-left: auto; margin-right: auto; display: inline-block; width: -webkit-fill-available; align-content: center; align-items: center; background: darkorange;">
-                            <h6 class="text-uppercase ls-1 mb-1" style="color: white;">Transfer</h6>
+                        <div class="row h-10" style="padding: 7%; margin-left: auto; margin-right: auto; display: inline-block; width: -webkit-fill-available; align-content: center; align-items: center; {% if t.type is 1 %}
+                        background: forestgreen;">
+                        <h6 class="text-uppercase ls-1 mb-1" style="color: white;">Add</h6>
+                        {% elif t.type is 2 %}
+                        background: crimson;">
+                        <h6 class="text-uppercase ls-1 mb-1" style="color: white;">Remove</h6>
+                        {% elif t.type is 3 %}
+                        background: darkorange;">
+                        <h6 class="text-uppercase ls-1 mb-1" style="color: white;">Transfer</h6>
+                        {% endif %}
                             <h4 class="font-weight-bold" style="color: white; font-size: 120%;">${{ t.amount }}</h4>
                         </div>
                     </div>
