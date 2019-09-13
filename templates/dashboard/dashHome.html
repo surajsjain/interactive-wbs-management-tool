@@ -17,10 +17,8 @@
             <div class="card-body">
 
                 {% if profile.level > 1 %}
-                jansjkdnkjans
                 {% for t in transfers %}
 
-                {{ t }}
                 {% if t.status %}
                 <a href="{% url 'comments' t.wbs_item.id %}">
                 <div class="card rounded basicCard" style="border: 0px;">
