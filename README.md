@@ -1,6 +1,15 @@
 # Unilever WBS Management
+Created for Unilever hackathon's WBS management tool
 
-Created for making the Unilever hackathon's WBS management tool
+## About
+This is an interractive web-based WBS management tool that allows you to manage your wbs budget interractively, along with providing other features such as setting user restrictions on changing or proposing change to the budgetting system, a comment threadding system to manage the budget change proposals and updation of budget through the comments thread by the authorised people. 
 
-### Note about pushing stuff into this Repo:
-Always do a `git pull` before you do a `git push` so that your code does not run into conflicts with the existing code on the cloud.
+## Tech stuff used
+1. Python
+2. Django (a Python web framework)
+3. HTML5 
+4. CSS3
+5. Bootstrap
+6. JavaScript
+7. Postgres (Database)
+8. Heroku (Cloud Platform)
