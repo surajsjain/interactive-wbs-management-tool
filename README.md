@@ -1,4 +1,4 @@
-# Unilever WBS Management
+# Web-based WBS Management Tool
 Created for Unilever hackathon's WBS management tool
 
 ## About
