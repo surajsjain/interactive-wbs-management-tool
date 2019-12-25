@@ -2,7 +2,7 @@
 Created for Unilever hackathon's WBS management tool
 
 ## About
-This is an interractive web-based WBS management tool that allows you to manage your wbs budget interractively, along with providing other features such as setting user restrictions on changing or proposing change to the budgetting system, a comment threadding system to manage the budget change proposals and updation of budget through the comments thread by the authorised people. 
+This is an interactive web-based WBS management tool that allows you to manage your wbs budget interactively, along with providing other features such as setting user restrictions on changing or proposing change to the budgetting system, a comment threadding system to manage the budget change proposals and updation of budget through the comments thread by the authorised people. 
 
 ## Tech stuff used
 1. Python
